@@ -1,26 +1,31 @@
-import { useState } from 'react'
-import './App.css'
-import reactLogo from './assets/react.svg'
+import { AppBar, Hidden, Toolbar, Typography } from '@mui/material'
+
+import Minifigs from 'pages/Minifigs'
+import { QueryClientProvider, ThemeProvider } from 'providers'
+
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+
+import appLogo from 'assets/favicon.ico'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <div>
-        <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </div>
+    <ThemeProvider>
+      <QueryClientProvider>
+        <AppBar position="sticky">
+          <Toolbar variant="dense">
+            <img src={appLogo} style={{ height: 24 }} />
+            <Typography variant="h6" sx={{ flexGrow: 1, marginLeft: 1 }}>
+              SW Lego
+              <Hidden smDown> Collection Manager</Hidden>
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Minifigs />
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
