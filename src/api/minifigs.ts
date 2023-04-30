@@ -1,24 +1,29 @@
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from 'constants/api'
 
+import { queryClient } from 'providers/QueryClientProvider'
 import { MinifigsList } from 'types/minifigs'
-import { getMinifigsListStatistics } from 'utils/minifigs'
 
 import api from './index'
 
+// We add the auth token for mutation queries
+api.interceptors.request.use((config) => {
+  const idToken = localStorage.getItem('idToken')
+  if (config.method?.toLowerCase() !== 'get' && idToken) {
+    config.params = {
+      auth: idToken,
+    }
+  }
+  return config
+})
+
 export const fetchMinifigs = () => api.get<MinifigsList>('/minifigs.json').then((res) => res.data)
+
+export const invalidateMinifigsQuery = () =>
+  queryClient.invalidateQueries({ queryKey: [queryKeys.minifigs] })
 
 export const useMinifigsQuery = () =>
   useQuery({
     queryKey: [queryKeys.minifigs],
     queryFn: fetchMinifigs,
   })
-
-export const useMinifigsStatisticsQuery = () => {
-  const { data, ...other } = useMinifigsQuery()
-
-  return {
-    data: data && getMinifigsListStatistics(data),
-    ...other,
-  }
-}

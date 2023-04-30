@@ -49,6 +49,11 @@ export const MinifigsFiltersContext = createContext<MinifigFiltersContextProps>(
   onChange: () => undefined,
   handleApplyFilter: () => undefined,
   handleDeleteFilter: () => undefined,
+  handleResetFilters: () => undefined,
+  quantities: {
+    total: 0,
+    filteredTotal: 0,
+  },
 })
 
 export const useMinifigsFilters = () => useContext(MinifigsFiltersContext)

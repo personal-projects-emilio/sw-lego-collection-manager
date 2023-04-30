@@ -1,23 +1,31 @@
 import { ReactElement } from 'react'
+import z from 'zod'
 
 import { Option } from './common'
-
 export interface FiltersController<
-  K extends string = string,
-  C extends Record<K, FilterConfig> = Record<K, FilterConfig>,
-  F extends Record<K, C[K]['defaultValue']> = Record<K, C[K]['defaultValue']>,
-  FV extends Partial<Record<K, ReturnType<C[K]['getValues']>>> = Partial<
-    Record<K, ReturnType<C[K]['getValues']>>
+  Key extends string = string,
+  Configs extends Record<Key, FilterConfig> = Record<Key, FilterConfig>,
+  Filters extends Record<Key, Configs[Key]['defaultValue']> = Record<
+    Key,
+    Configs[Key]['defaultValue']
+  >,
+  FilterValues extends Partial<Record<Key, ReturnType<Configs[Key]['getValues']>>> = Partial<
+    Record<Key, ReturnType<Configs[Key]['getValues']>>
   >
 > {
-  filterConfigs: C
-  filters: F
-  filtersValues: FV
+  filterConfigs: Configs
+  filters: Filters
+  filtersValues: FilterValues
   filterPreloaded: boolean
-  initialFilters: F
-  onChange: (newFilters: F) => void
-  handleDeleteFilter: (filterName: K) => void
-  handleApplyFilter: (filterName: K, value: F[K]) => void
+  initialFilters: Filters
+  onChange: (newFilters: Filters) => void
+  handleDeleteFilter: (filterName: Key) => void
+  handleApplyFilter: (filterName: Key, value: Filters[Key]) => void
+  handleResetFilters: () => void
+  quantities: {
+    total: number
+    filteredTotal: number
+  }
 }
 
 export type FilterComponent<O, V> = (props: {
@@ -52,4 +60,5 @@ export interface SelectFilterConfig extends FilterConfig<Option<string>, Option<
   options: Option<string>[]
 }
 
-export type Display = 'all' | 'missing' | 'owned'
+export const zDisplay = z.union([z.literal('all'), z.literal('missing'), z.literal('owned')])
+export type Display = z.infer<typeof zDisplay>
