@@ -10,6 +10,15 @@ export const theme = createTheme({
   palette: {
     mode: 'dark',
   },
+  components: {
+    MuiTextField: {
+      defaultProps: {
+        InputLabelProps: {
+          shrink: true,
+        },
+      },
+    },
+  },
 })
 
 export const muiCache = createCache({

@@ -18,7 +18,6 @@ export function Filters<
   filters,
   handleApplyFilter,
   handleDeleteFilter,
-  filterPreloaded,
   quantities: { total, filteredTotal },
 }: FiltersController<Key, Configs, Filters>) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)

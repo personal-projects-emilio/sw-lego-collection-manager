@@ -1,21 +1,20 @@
 import { FC } from 'react'
-import { MdDelete } from 'react-icons/md'
-import { Divider, IconButton, Paper, Switch, Typography } from '@mui/material'
+import { Divider, Paper, Switch, Tooltip, Typography } from '@mui/material'
 
 import LogoLink from 'components/LogoLink'
 import OverflowTypography from 'components/OverflowTypography'
 import { useMinifigsMutations } from 'hooks'
-import { useAuth } from 'providers'
 import { Minifig } from 'types/minifigs'
 
-import NameAndTags from './NameAndTags'
+import MutationSpeedDial from './components/MutationSpeedDial'
+import NameAndTags from './components/NameAndTags'
 
 import useStyles from './styles'
 
-export const MinifigCard: FC<Minifig> = ({ id, name, characterName, tags, possessed }) => {
+export const MinifigCard: FC<Minifig> = (minifig) => {
   const { classes } = useStyles()
-  const { idToken } = useAuth()
-  const { toggleMinifigOwned, deleteMinifig } = useMinifigsMutations()
+  const { toggleMinifigOwned, isLoading } = useMinifigsMutations()
+  const { id, name, characterName, tags, possessed } = minifig
   return (
     <Paper classes={{ root: classes.paper }}>
       <img
@@ -32,22 +31,22 @@ export const MinifigCard: FC<Minifig> = ({ id, name, characterName, tags, posses
         <NameAndTags characterName={characterName} tags={tags} />
         <Divider />
         <div className={classes.linkContainer}>
-          <Switch
-            value={possessed}
-            checked={possessed}
-            disabled={!idToken}
-            onChange={() => toggleMinifigOwned(id)}
-          />
-          <IconButton disabled={!idToken} onClick={() => deleteMinifig(id)}>
-            <MdDelete />
-          </IconButton>
-          <Divider flexItem orientation="vertical" />
           <LogoLink id={id} variant="minifig" target="bricklink" />
           <LogoLink id={id} variant="minifig" target="brickset" />
+          <Divider flexItem orientation="vertical" />
+          <Tooltip title={isLoading ? 'Mutating...' : undefined}>
+            <span>
+              <Switch
+                value={possessed}
+                checked={possessed}
+                disabled={isLoading}
+                onChange={() => toggleMinifigOwned(id)}
+              />
+            </span>
+          </Tooltip>
+
+          <MutationSpeedDial {...minifig} />
         </div>
-        {/* TODO: Add minifig edition */}
-        {/* <Divider /> */}
-        {/* <MinifigEdition {...minifig} /> */}
       </div>
     </Paper>
   )
