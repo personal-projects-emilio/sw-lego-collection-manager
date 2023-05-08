@@ -21,7 +21,7 @@ export const Minifigs: FC = () => {
     lg: 4,
     xl: 5,
   })
-  const { filtersValues, handleResetFilters } = useMinifigsFilters()
+  const { filtersValues, handleResetFilters, filterPreloaded } = useMinifigsFilters()
   const gridFilteredData = useMemo(() => {
     const filteredList = getFilteredMinifigsList(data ?? [], filtersValues)
     return reduceInArrayOfNElements(filteredList, numberOfColumns)
@@ -38,7 +38,7 @@ export const Minifigs: FC = () => {
   })
   const items = virtualizer.getVirtualItems()
 
-  if (isLoading) return <>{'Loading...'}</>
+  if (isLoading || !filterPreloaded) return <>{'Loading...'}</>
 
   if (error || !gridFilteredData) return <>{'An error has occurred'}</>
 

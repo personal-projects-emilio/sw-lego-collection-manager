@@ -6,11 +6,14 @@ import { Link } from '@tanstack/router'
 import { useCurrentRoute } from 'hooks'
 import { useAuth } from 'providers'
 
+const iconButtonId = 'application-menu-icon-button'
+const menuId = 'menu-header'
+
 export const BurgerMenu: FC = () => {
   const { idToken, logout } = useAuth()
   const currentRoute = useCurrentRoute(['/', '/auth'])
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null)
   const open = Boolean(anchorEl)
 
   const handleMenu: IconButtonProps['onClick'] = (event) => {
@@ -27,9 +30,9 @@ export const BurgerMenu: FC = () => {
   return (
     <>
       <IconButton
-        id="application-menu-icon"
-        aria-label="application menu icon"
-        aria-controls={open ? 'basic-menu' : undefined}
+        id={iconButtonId}
+        aria-label="application menu icon button"
+        aria-controls={open ? menuId : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleMenu}
@@ -37,7 +40,7 @@ export const BurgerMenu: FC = () => {
         <MdMenu />
       </IconButton>
       <Menu
-        id="menu-header"
+        id={menuId}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -56,7 +59,7 @@ export const BurgerMenu: FC = () => {
           },
         })}
         MenuListProps={{
-          'aria-labelledby': 'application-menu-icon',
+          'aria-labelledby': iconButtonId,
         }}
       >
         <MenuItem

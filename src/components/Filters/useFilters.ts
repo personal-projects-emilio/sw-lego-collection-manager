@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from '@tanstack/router'
+import { useNavigate, useSearch } from '@tanstack/router'
 import { ZodObject, ZodRawShape } from 'zod'
 
 import { FilterConfig, FiltersController } from 'types/filters'
@@ -54,7 +54,7 @@ export const useFilters = <
       }
     }, {} as FilterValues)
   }
-
+  const search = useSearch({ from: '/' })
   const [filters, setFilters] = useState<Filters>(initialFilters)
   const [filtersValues, setFiltersValues] = useState<FilterValues>(getFiltersValues(initialFilters))
   const [filterPreloaded, setFilterPreloaded] = useState(false)
@@ -64,31 +64,31 @@ export const useFilters = <
   useEffect(() => {
     if (dataIsLoading) return
     updateUrlFromFilters()
-  }, [dataIsLoading])
+  }, [dataIsLoading, filterConfigs])
 
   useEffect(() => {
     setQuantities(getQuantities(filtersValues))
   }, [filtersValues])
 
   const updateUrlFromFilters = () => {
-    const incomingSearch = new URLSearchParams(window.location.search)
+    const incomingSearch = new URLSearchParams(search)
     const newSearch: Partial<Record<Key, unknown>> = {}
-    const newFilters = { ...filters }
-    Object.keys(filtersValues).forEach((k) => {
+    const newFilters = {} as Filters
+    Object.keys(filterConfigs).forEach((k) => {
       const key = k as Key
       const urlIncomingValue = incomingSearch.get(key)
       if (!urlIncomingValue) return
 
-      if (urlIncomingValue === filtersValues[key]) return (newSearch[key] = urlIncomingValue)
-
-      newFilters[key] = filterConfigs[key].options?.find(
+      const existingOption = filterConfigs[key].options?.find(
         (el) => el.value === urlIncomingValue
       ) as Filters[Key]
-      const optionValue = newFilters[key]
+      if (!existingOption) return
 
-      if (!optionValue) return
+      newFilters[key] = existingOption
 
-      newSearch[key] = filterConfigs[key].getValues(optionValue)
+      if (urlIncomingValue === filtersValues[key]) return (newSearch[key] = urlIncomingValue)
+
+      newSearch[key] = filterConfigs[key].getValues(existingOption)
     })
     navigate({ search: searchSchema ? searchSchema.parse(newSearch) : newSearch })
     setFilters(newFilters)
@@ -99,15 +99,16 @@ export const useFilters = <
   const onChange = (newFilters: Filters) => {
     const newFiltersValues = getFiltersValues(newFilters)
     const newSearch: Partial<Record<Key, unknown>> = {}
-    Object.keys(filtersValues).forEach((key) => {
+    Object.keys(newFiltersValues).forEach((key) => {
       const newValue = newFiltersValues[key as Key]
       if (!newValue) return
 
       newSearch[key as Key] = newValue
     })
+
     setFilters(newFilters)
     setFiltersValues(newFiltersValues)
-    navigate({ search: newSearch })
+    navigate({ search: searchSchema ? searchSchema.parse(newSearch) : newSearch })
   }
 
   const handleDeleteFilter = (filterName: Key) => {

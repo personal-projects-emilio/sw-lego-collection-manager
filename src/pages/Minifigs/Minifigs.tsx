@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { Skeleton } from '@mui/material'
 import { minifigsSearchSchema } from 'routes'
 
@@ -16,8 +16,12 @@ import {
 
 export const Minifigs: FC = () => {
   const { data, isLoading } = useMinifigsQuery()
+  const filterConfigs = useMemo(
+    () => getMinifigFilterConfigs(getMinifigsListStatistics(data ?? [])),
+    [data]
+  )
   const filtersController = useFilters<keyof typeof minfigsInitialFilters>({
-    filterConfigs: getMinifigFilterConfigs(getMinifigsListStatistics(data ?? [])),
+    filterConfigs,
     initialFilters: minfigsInitialFilters,
     dataIsLoading: isLoading,
     searchSchema: minifigsSearchSchema,
