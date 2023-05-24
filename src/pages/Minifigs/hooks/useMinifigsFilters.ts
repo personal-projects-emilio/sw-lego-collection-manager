@@ -10,6 +10,8 @@ import { formatOptionsFromLabelAndAmout } from 'utils/filters'
 export const getMinifigFilterConfigs = (stats?: MinifigsListStatistics) => {
   const tagOptions = formatOptionsFromLabelAndAmout(stats?.tags, true)
   const characterNameOptions = formatOptionsFromLabelAndAmout(stats?.characterNames, true)
+  const timelineOptions = formatOptionsFromLabelAndAmout(stats?.timelines, true)
+  const appearanceOptions = formatOptionsFromLabelAndAmout(stats?.appearances, true)
 
   return {
     display: makeRadioGroup({
@@ -28,6 +30,16 @@ export const getMinifigFilterConfigs = (stats?: MinifigsListStatistics) => {
       defaultValue: undefined,
       options: characterNameOptions ?? [],
     }),
+    timeline: makeSelect({
+      label: 'Timeline',
+      defaultValue: undefined,
+      options: timelineOptions ?? [],
+    }),
+    appearance: makeSelect({
+      label: 'Appearance',
+      defaultValue: undefined,
+      options: appearanceOptions ?? [],
+    }),
   }
 }
 
@@ -35,6 +47,8 @@ export const minfigsInitialFilters = {
   display: displayOptions[0],
   tag: undefined,
   characterName: undefined,
+  timeline: undefined,
+  appearance: undefined,
 }
 
 export type MinifigFiltersContextProps = ReturnType<

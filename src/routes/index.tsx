@@ -7,9 +7,11 @@ import Minifigs from 'pages/Minifigs'
 import { zDisplay } from 'types/filters'
 
 export const minifigsSearchSchema = z.object({
-  display: zDisplay.default('all'),
+  appearance: z.string().optional(),
   characterName: z.string().optional(),
+  display: zDisplay.default('all'),
   tag: z.string().optional(),
+  timeline: z.string().optional(),
 })
 
 export type MinifigsSearch = z.infer<typeof minifigsSearchSchema>
