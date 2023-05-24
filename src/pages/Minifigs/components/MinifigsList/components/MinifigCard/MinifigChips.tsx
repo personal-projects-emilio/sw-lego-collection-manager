@@ -6,15 +6,15 @@ import OverflowTypography from 'components/OverflowTypography'
 import { useMinifigsMutations } from 'hooks'
 import { Minifig } from 'types/minifigs'
 
+import MinifigChips from './components/MinifigChips'
 import MutationSpeedDial from './components/MutationSpeedDial'
-import NameAndTags from './components/NameAndTags'
 
 import useStyles from './styles'
 
 export const MinifigCard: FC<Minifig> = (minifig) => {
   const { classes } = useStyles()
   const { toggleMinifigOwned, isLoading } = useMinifigsMutations()
-  const { id, name, characterName, tags, possessed } = minifig
+  const { id, name, possessed, ...restMinifig } = minifig
   return (
     <Paper classes={{ root: classes.paper }}>
       <img
@@ -28,7 +28,7 @@ export const MinifigCard: FC<Minifig> = (minifig) => {
           {name}
         </OverflowTypography>
         <Divider />
-        <NameAndTags characterName={characterName} tags={tags} />
+        <MinifigChips {...restMinifig} />
         <Divider />
         <div className={classes.linkContainer}>
           <LogoLink id={id} variant="minifig" target="bricklink" />

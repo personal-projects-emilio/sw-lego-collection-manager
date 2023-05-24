@@ -39,15 +39,16 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
     () => getMinifigsListStatistics(minifigsList ?? []),
     [minifigsList]
   )
-  const tagOptions = useMemo(
-    () => formatOptionsFromLabelAndAmout(minifigStatistics?.tags, true),
-    [minifigStatistics]
-  )
-  const characterNameOptions = useMemo(
-    () => formatOptionsFromLabelAndAmout(minifigStatistics?.characterNames, true),
-    [minifigStatistics]
-  )
 
+  const options = useMemo(
+    () => ({
+      appearances: formatOptionsFromLabelAndAmout(minifigStatistics?.appearances, true),
+      characterNames: formatOptionsFromLabelAndAmout(minifigStatistics?.characterNames, true),
+      tags: formatOptionsFromLabelAndAmout(minifigStatistics?.tags, true),
+      timelines: formatOptionsFromLabelAndAmout(minifigStatistics?.timelines, true),
+    }),
+    [minifigStatistics]
+  )
   const minifigsListIds = useMemo(
     () => minifigsList?.map((minifig) => minifig.id) || [],
     [minifigsList]
@@ -70,11 +71,13 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
 
   const { control, reset, unregister, handleSubmit } = useForm<Minifig>({
     defaultValues: {
+      appearances: [],
+      characterName: '',
       id: '',
       name: '',
-      characterName: '',
-      tags: [],
       possessed: false,
+      tags: [],
+      timelines: [],
       ...editionMinifigData,
     },
     resolver: zodResolver(minifigValidationSchemaWithRefinedIdCheck),
@@ -144,7 +147,7 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
                 {...field}
                 label="Character Name"
                 creatable
-                options={characterNameOptions ?? []}
+                options={options.characterNames ?? []}
                 TextFieldProps={{
                   placeholder: 'Character name (ex: Battle Droid)',
                   error: fieldState.invalid,
@@ -163,9 +166,45 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
                 label="Tags"
                 creatable
                 multiple
-                options={tagOptions ?? []}
+                options={options.tags ?? []}
                 TextFieldProps={{
                   placeholder: 'Minifig tags (ex: Battle Droid, CIS, Droid)',
+                  error: fieldState.invalid,
+                  helperText: fieldState.error?.message,
+                }}
+              />
+            )}
+          />
+          <Controller
+            name="timelines"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                {...field}
+                label="Timelines"
+                creatable
+                multiple
+                options={options.timelines ?? []}
+                TextFieldProps={{
+                  placeholder: 'Minifig timelines (ex: Fall of the Jedi, Age of Rebellion)',
+                  error: fieldState.invalid,
+                  helperText: fieldState.error?.message,
+                }}
+              />
+            )}
+          />
+          <Controller
+            name="appearances"
+            control={control}
+            render={({ field, fieldState }) => (
+              <Autocomplete
+                {...field}
+                label="Appearances"
+                creatable
+                multiple
+                options={options.appearances ?? []}
+                TextFieldProps={{
+                  placeholder: 'Minifig appearances (ex: The Mandalorian, The Clone Wars...)',
                   error: fieldState.invalid,
                   helperText: fieldState.error?.message,
                 }}
