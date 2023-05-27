@@ -70,6 +70,14 @@ export const BurgerMenu: FC = () => {
         >
           Minifigs
         </MenuItem>
+        <MenuItem
+          component={(props) => <Link {...props} />}
+          onClick={handleClose}
+          selected={currentRoute?.id === '/sets'}
+          to="/sets"
+        >
+          Sets
+        </MenuItem>
         {idToken ? (
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         ) : (
