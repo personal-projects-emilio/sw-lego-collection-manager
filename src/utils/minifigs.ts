@@ -1,6 +1,7 @@
 import { MinifigFiltersContextProps } from 'pages/Minifigs/hooks/useMinifigsFilters'
-import { LabelAndAmout } from 'types/common'
 import { MinifigsList, MinifigsListStatistics } from 'types/minifigs'
+
+import { statisticsHelper } from './array'
 
 /**
  * Return the tags, character names, timelines and appearances alphabetically sorted lists and some other misce stats from a MinifigsList
@@ -20,10 +21,10 @@ export const getMinifigsListStatistics = (minifigsList: MinifigsList) => {
 
       return {
         ...accumulator,
-        appearances: minifigStatisticsHelper(appearances, accumulator.appearances),
-        characterNames: minifigStatisticsHelper(characterName, accumulator.characterNames),
-        tags: minifigStatisticsHelper(tags, accumulator.tags),
-        timelines: minifigStatisticsHelper(timelines, accumulator.timelines),
+        appearances: statisticsHelper(appearances, accumulator.appearances),
+        characterNames: statisticsHelper(characterName, accumulator.characterNames),
+        tags: statisticsHelper(tags, accumulator.tags),
+        timelines: statisticsHelper(timelines, accumulator.timelines),
       }
     },
     {
@@ -45,37 +46,6 @@ export const getMinifigsListStatistics = (minifigsList: MinifigsList) => {
   return minifigsListStatistics
 }
 
-const minifigStatisticsHelper = (
-  element: string | string[] | undefined,
-  accumulator: LabelAndAmout[]
-) => {
-  if (!element) return accumulator
-
-  if (typeof element === 'string') {
-    const existingIndex = accumulator.findIndex((el) => el.label === element)
-    // If it is a new character name we had it to the accumulator
-    if (existingIndex === -1) {
-      accumulator.push({ label: element, amount: 1 })
-    } else {
-      // Or else we increment the amount of the existing one
-      accumulator[existingIndex].amount++
-    }
-    return accumulator
-  }
-
-  element.forEach((label) => {
-    const existingIndex = accumulator.findIndex((el) => el.label === label)
-    // If it is a new appearance we had it to the accumulator
-    if (existingIndex === -1) {
-      accumulator.push({ label, amount: 1 })
-    } else {
-      // Or else we increment the amount of the existing one
-      accumulator[existingIndex].amount++
-    }
-  })
-  return accumulator
-}
-
 /**
  * Return the filtered list of minifigs
  */
@@ -86,7 +56,7 @@ export const getFilteredMinifigsList = (
   list.filter((minifig) => {
     const { display, tag, timeline, characterName: filterCharacterName, appearance } = filters
     const { possessed, tags, characterName, timelines, appearances } = minifig
-    const showFiltered =
+    const displayFiltered =
       display === 'all' ||
       (display === 'owned' && possessed) ||
       (display === 'missing' && !possessed)
@@ -95,7 +65,7 @@ export const getFilteredMinifigsList = (
     const hasFilterCharacName = filterCharacterName ? filterCharacterName === characterName : true
     const hasFilterTimeline = timeline ? timelines?.includes(timeline) : true
     return (
-      showFiltered &&
+      displayFiltered &&
       hasFilterCharacName &&
       hasFilterTag &&
       hasFilterTimeline &&

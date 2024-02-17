@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { LabelAndAmout } from './common'
 
 export const minifigValidationSchema = z.object({
-  appearances: z.array(z.string()).optional(),
+  appearances: z.array(z.string()).default([]),
   characterName: z.string().min(1, {
     message: 'Character name is required',
   }),
@@ -19,15 +19,20 @@ export const minifigValidationSchema = z.object({
     message: 'Name is required',
   }),
   possessed: z.boolean().default(false),
-  tags: z.array(z.string()).optional(),
-  timelines: z.array(z.string()).optional(),
+  tags: z.array(z.string()).default([]),
+  timelines: z.array(z.string()).default([]),
+  setApparances: z
+    .array(
+      z.object({ setId: z.string().min(1).or(z.number().min(1)), quantity: z.number().min(1) })
+    )
+    .default([]),
 })
 
 export type Minifig = z.infer<typeof minifigValidationSchema>
 
 export type MinifigsList = Minifig[]
 
-export interface MinifigsListStatistics {
+export type MinifigsListStatistics = {
   appearances: LabelAndAmout[]
   characterNames: LabelAndAmout[]
   tags: LabelAndAmout[]

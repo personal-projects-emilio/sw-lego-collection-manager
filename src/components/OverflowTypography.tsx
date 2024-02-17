@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { Tooltip, TooltipProps, Typography, TypographyProps } from '@mui/material'
 
-interface OverflowTypographyProps extends TypographyProps {
+type OverflowTypographyProps = TypographyProps & {
   tooltipProps?: Omit<TooltipProps, 'title' | 'children'>
 }
 

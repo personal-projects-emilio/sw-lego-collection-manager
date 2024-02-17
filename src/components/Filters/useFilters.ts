@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearch } from '@tanstack/router'
+import { RoutesPath } from 'routes'
 import { ZodObject, ZodRawShape } from 'zod'
 
 import { FilterConfig, FiltersController } from 'types/filters'
 
-interface UseFiltersProps<
+type UseFiltersProps<
   Key extends string = string,
   Configs extends Record<Key, FilterConfig> = Record<Key, FilterConfig>,
   Filters extends Record<Key, Configs[Key]['defaultValue']> = Record<
@@ -12,7 +13,7 @@ interface UseFiltersProps<
     Configs[Key]['defaultValue']
   >,
   SearchSchema extends ZodRawShape = ZodRawShape
-> {
+> = {
   filterConfigs: Configs
   initialFilters: Filters
   dataIsLoading?: boolean
@@ -21,6 +22,7 @@ interface UseFiltersProps<
     total: number
     filteredTotal: number
   }
+  searchPath: RoutesPath
 }
 
 export const useFilters = <
@@ -39,6 +41,7 @@ export const useFilters = <
   dataIsLoading = false,
   searchSchema,
   getQuantities,
+  searchPath,
 }: UseFiltersProps<Key, Configs, Filters>): FiltersController<
   Key,
   Configs,
@@ -54,7 +57,7 @@ export const useFilters = <
       }
     }, {} as FilterValues)
   }
-  const search = useSearch({ from: '/' })
+  const search = useSearch({ from: searchPath })
   const [filters, setFilters] = useState<Filters>(initialFilters)
   const [filtersValues, setFiltersValues] = useState<FilterValues>(getFiltersValues(initialFilters))
   const [filterPreloaded, setFilterPreloaded] = useState(false)
@@ -71,13 +74,27 @@ export const useFilters = <
   }, [filtersValues])
 
   const updateUrlFromFilters = () => {
-    const incomingSearch = new URLSearchParams(search)
+    const stringifySearch = Object.fromEntries(
+      Object.entries(search).map(([key, value]) => [key, value ? String(value) : ''])
+    )
+    const incomingSearch = new URLSearchParams(stringifySearch)
     const newSearch: Partial<Record<Key, unknown>> = {}
     const newFilters = {} as Filters
     Object.keys(filterConfigs).forEach((k) => {
       const key = k as Key
       const urlIncomingValue = incomingSearch.get(key)
       if (!urlIncomingValue) return
+
+      if (!('options' in filterConfigs[key])) {
+        const optionFromValue = {
+          label: urlIncomingValue,
+          value: String(urlIncomingValue),
+        } as Filters[Key]
+        newFilters[key] = optionFromValue
+        newSearch[key] = urlIncomingValue
+        optionFromValue && filterConfigs[key].getValues(optionFromValue)
+        return
+      }
 
       const existingOption = filterConfigs[key].options?.find(
         (el) => el.value === urlIncomingValue

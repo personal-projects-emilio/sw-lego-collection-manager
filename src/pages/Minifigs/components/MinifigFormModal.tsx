@@ -19,7 +19,7 @@ import { Minifig, minifigValidationSchema } from 'types/minifigs'
 import { formatOptionsFromLabelAndAmout } from 'utils/filters'
 import { getMinifigsListStatistics } from 'utils/minifigs'
 
-export interface MinifigFormModalProps {
+export type MinifigFormModalProps = {
   handleClose: () => void
   editionMinifigData?: Partial<Minifig>
 }
@@ -215,7 +215,10 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
             name="possessed"
             control={control}
             render={({ field }) => (
-              <FormControlLabel label="Possessed" control={<Switch {...field} />} />
+              <FormControlLabel
+                label="Possessed"
+                control={<Switch checked={field.value} {...field} />}
+              />
             )}
           />
         </DialogContent>

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { queryKeys } from 'constants/api'
+import { endPoints, queryKeys } from 'constants/api'
 
 import { queryClient } from 'providers/QueryClientProvider'
 import { MinifigsList } from 'types/minifigs'
@@ -17,9 +17,9 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-export const fetchMinifigs = () => api.get<MinifigsList>('/minifigs.json').then((res) => res.data)
+export const fetchMinifigs = () => api.get<MinifigsList>(endPoints.minifigs).then((res) => res.data)
 
-export const mutateMinifigs = async (data: MinifigsList) => await api.put(`/minifigs.json`, data)
+export const mutateMinifigs = async (data: MinifigsList) => await api.put(endPoints.minifigs, data)
 
 // Refetch the minifigs (after a mutation)
 export const invalidateMinifigsQuery = () =>
@@ -27,7 +27,7 @@ export const invalidateMinifigsQuery = () =>
 
 // Used to update local query cache for non authorized users
 export const setMinifigsQueryData = (data: MinifigsList) =>
-  queryClient.setQueryData([queryKeys.minifigs], () => data)
+  queryClient.setQueryData([queryKeys.minifigs], data)
 
 export const useMinifigsQuery = () =>
   useQuery({

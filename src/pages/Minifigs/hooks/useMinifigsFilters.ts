@@ -2,8 +2,8 @@ import { createContext, useContext } from 'react'
 import { displayOptions } from 'constants/options'
 
 import { useFilters } from 'components/Filters/useFilters'
+import { makeAutocomplete } from 'components/Filters/utils/makeAutocomplete'
 import { makeRadioGroup } from 'components/Filters/utils/makeRadioGroup'
-import { makeSelect } from 'components/Filters/utils/makeSelect'
 import { MinifigsListStatistics } from 'types/minifigs'
 import { formatOptionsFromLabelAndAmout } from 'utils/filters'
 
@@ -20,22 +20,22 @@ export const getMinifigFilterConfigs = (stats?: MinifigsListStatistics) => {
       isMandatory: true,
       options: displayOptions,
     }),
-    tag: makeSelect({
+    tag: makeAutocomplete({
       label: 'Tag',
       defaultValue: undefined,
       options: tagOptions ?? [],
     }),
-    characterName: makeSelect({
+    characterName: makeAutocomplete({
       label: 'Character Name',
       defaultValue: undefined,
       options: characterNameOptions ?? [],
     }),
-    timeline: makeSelect({
+    timeline: makeAutocomplete({
       label: 'Timeline',
       defaultValue: undefined,
       options: timelineOptions ?? [],
     }),
-    appearance: makeSelect({
+    appearance: makeAutocomplete({
       label: 'Appearance',
       defaultValue: undefined,
       options: appearanceOptions ?? [],

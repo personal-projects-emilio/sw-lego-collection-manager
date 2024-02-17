@@ -3,11 +3,11 @@ import { Box, Button, List, ListItem, ListItemButton, ListItemText, Popover } fr
 
 import { FilterConfig } from 'types/filters'
 
-interface FilterPopoverProps<
+type FilterPopoverProps<
   K extends string = string,
   C extends Record<K, FilterConfig> = Record<K, FilterConfig>,
   F extends Record<K, C[K]['defaultValue']> = Record<K, C[K]['defaultValue']>
-> {
+> = {
   anchorEl: HTMLElement | null
   onClose: () => void
   selectedFilter: null | (C[K] & { value: F[K]; filterName: K })
@@ -60,6 +60,7 @@ export function FilterPopover<
     >
       {selectedFilter ? (
         <Box
+          component="form"
           sx={(theme) => ({
             display: 'grid',
             gridTemplateColumns: 'auto auto',
@@ -77,7 +78,7 @@ export function FilterPopover<
           <Button onClick={onClose} variant="outlined">
             Cancel
           </Button>
-          <Button onClick={handleApply} variant="contained">
+          <Button type="submit" onClick={handleApply} variant="contained">
             Apply
           </Button>
         </Box>
