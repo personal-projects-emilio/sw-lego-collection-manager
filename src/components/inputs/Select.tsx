@@ -3,8 +3,10 @@ import { MenuItem, TextField, TextFieldProps } from '@mui/material'
 
 import { Option } from 'types/common'
 
-export interface SelectProps<V extends string = string>
-  extends Omit<TextFieldProps, 'id' | 'onChange' | 'select' | 'value'> {
+export type SelectProps<V extends string = string> = Omit<
+  TextFieldProps,
+  'id' | 'onChange' | 'select' | 'value'
+> & {
   options: Option<V>[]
   value: V
   onChange: (value: V) => void

@@ -19,7 +19,7 @@ export const useMinifigsMutations = () => {
     onSuccess: () => invalidateMinifigsQuery(),
   })
 
-  const toggleMinifigOwned = async (minifigId: Minifig['id']) => {
+  const toggleMinifigPossession = async (minifigId: Minifig['id']) => {
     assert(minifigsList, 'No minifigs list found')
 
     const indexOfMinifig = minifigsList.find(({ id }) => id === minifigId)
@@ -80,7 +80,7 @@ export const useMinifigsMutations = () => {
   }
 
   return {
-    toggleMinifigOwned,
+    toggleMinifigPossession,
     deleteMinifig,
     addMinifig,
     editMinifig,

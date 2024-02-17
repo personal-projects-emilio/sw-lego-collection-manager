@@ -8,6 +8,9 @@ import { AutocompleteOption, AutocompleteProps } from './types'
 
 const filter = createFilterOptions<AutocompleteOption>()
 
+const asNoValue = (option: AutocompleteOption | AutocompleteOption[] | null | undefined): boolean =>
+  option === null || (Array.isArray(option) && option.length === 0) ? true : false
+
 export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
   ({ multiple, options, creatable, label, value, TextFieldProps, onChange, ...rest }, ref) => {
     const [optionValue, setOptionValue] = useState<
@@ -46,14 +49,23 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       (newValue: AutocompleteOption | AutocompleteOption[] | null | undefined) => {
         setOptionValue(newValue)
         if (Array.isArray(newValue)) {
-          // @ts-expect-error TBD
           onChange(newValue.map((option) => option.value))
         } else {
-          // @ts-expect-error TBD
           onChange(newValue ? newValue.value : null)
         }
       },
       [setOptionValue, onChange]
+    )
+
+    const getOptiondDisabled = useCallback(
+      (option: AutocompleteOption) => {
+        if (!value) return false
+        if (Array.isArray(value)) {
+          return value.includes(option.value)
+        }
+        return value === option.value
+      },
+      [value]
     )
 
     return (
@@ -90,17 +102,19 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           }
           return filtered
         }}
+        getOptionDisabled={getOptiondDisabled}
         renderInput={(params) => (
           <TextField
             {...params}
             ref={ref}
             variant="outlined"
             label={label}
+            {...TextFieldProps}
             InputLabelProps={{
-              ...TextFieldProps.InputLabelProps,
+              ...TextFieldProps?.InputLabelProps,
               shrink: true,
             }}
-            {...TextFieldProps}
+            placeholder={asNoValue(optionValue) ? TextFieldProps?.placeholder : undefined}
           />
         )}
       />

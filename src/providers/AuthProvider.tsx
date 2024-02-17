@@ -2,7 +2,7 @@ import { createContext, FC, PropsWithChildren, useContext, useEffect, useState }
 import { UseMutateFunction, useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/router'
 
-import { loginUser } from 'api/auth'
+import { loginUser, refreshSecureToken } from 'api/auth'
 import { LoginData } from 'types/auth'
 import { LoginInputs } from 'types/auth'
 
@@ -23,6 +23,7 @@ const AuthContext = createContext<Auth>({
 const clearAuthLocalStorage = () => {
   localStorage.removeItem('idToken')
   localStorage.removeItem('expirationDate')
+  localStorage.removeItem('refreshToken')
 }
 
 let expireAuthTiemout: ReturnType<typeof setTimeout>
@@ -30,7 +31,11 @@ let expireAuthTiemout: ReturnType<typeof setTimeout>
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate()
   const [idToken, setIdToken] = useState<string>()
-
+  const setAuthTimeout = (expirationDate: string) => {
+    expireAuthTiemout = setTimeout(() => {
+      mutateRefreshToken()
+    }, new Date(expirationDate).getTime() - new Date().getTime())
+  }
   useEffect(() => {
     const storageIdToken = localStorage.getItem('idToken')
     const storageExpirationDate = localStorage.getItem('expirationDate')
@@ -42,25 +47,43 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setAuthTimeout(storageExpirationDate)
   }, [])
 
-  const setAuthTimeout = (expirationDate: string) => {
-    expireAuthTiemout = setTimeout(() => {
-      logout()
-    }, new Date(expirationDate).getTime() - new Date().getTime())
-  }
-
-  const { mutate: login, isLoading } = useMutation(loginUser, {
-    onSuccess: ({ expiresIn, idToken }) => {
-      setIdToken(idToken)
+  const { mutate: login, isLoading: isLoginLoading } = useMutation(loginUser, {
+    onSuccess: ({ expiresIn, idToken: newIdToken, refreshToken }) => {
+      setIdToken(newIdToken)
       const expirationDate = new Date(
         new Date().getTime() + parseInt(expiresIn, 10) * 1000
       ).toISOString()
 
-      localStorage.setItem('idToken', idToken)
+      localStorage.setItem('idToken', newIdToken)
+      localStorage.setItem('refreshToken', refreshToken)
       localStorage.setItem('expirationDate', expirationDate)
       navigate({ to: '/' })
     },
-    onError: (error) => console.error(error),
+    onError: () => {
+      logout()
+    },
   })
+
+  const { mutate: mutateRefreshToken, isLoading: isRefreshLoading } = useMutation(
+    refreshSecureToken,
+    {
+      onSuccess: ({ expires_in, id_token, refresh_token }) => {
+        clearTimeout(expireAuthTiemout)
+        setIdToken(id_token)
+        const expirationDate = new Date(
+          new Date().getTime() + parseInt(expires_in, 10) * 1000
+        ).toISOString()
+
+        localStorage.setItem('idToken', id_token)
+        localStorage.setItem('refreshToken', refresh_token)
+        localStorage.setItem('expirationDate', expirationDate)
+        setAuthTimeout(expirationDate)
+      },
+      onError: () => {
+        logout()
+      },
+    }
+  )
 
   const logout = () => {
     clearAuthLocalStorage()
@@ -75,7 +98,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         idToken,
         login,
         logout,
-        isLoading,
+        isLoading: isLoginLoading || isRefreshLoading,
       }}
     >
       {children}

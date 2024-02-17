@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 import z from 'zod'
 
 import { Option } from './common'
-export interface FiltersController<
+export type FiltersController<
   Key extends string = string,
   Configs extends Record<Key, FilterConfig> = Record<Key, FilterConfig>,
   Filters extends Record<Key, Configs[Key]['defaultValue']> = Record<
@@ -12,7 +12,7 @@ export interface FiltersController<
   FilterValues extends Partial<Record<Key, ReturnType<Configs[Key]['getValues']>>> = Partial<
     Record<Key, ReturnType<Configs[Key]['getValues']>>
   >
-> {
+> = {
   filterConfigs: Configs
   filters: Filters
   filtersValues: FilterValues
@@ -33,7 +33,7 @@ export type FilterComponent<O, V> = (props: {
   onChange: (option?: O) => void
 }) => ReactElement
 
-export interface FilterConfig<O extends Option = Option, V extends undefined | O | O[] = O> {
+export type FilterConfig<O extends Option = Option, V extends undefined | O | O[] = O> = {
   // name: string
   label: string
   component: FilterComponent<O, V>
@@ -43,21 +43,30 @@ export interface FilterConfig<O extends Option = Option, V extends undefined | O
   chipLabel: (option: V) => string | undefined
   getValues: (option: V) => V extends O[] ? O['value'][] : O['value']
   options?: O[]
-  inputType?: 'checkbox' | 'radio' | 'select'
+  inputType?: 'checkbox' | 'radio' | 'select' | 'autocomplete' | 'textfield'
 }
 
-export interface CheckboxFilterConfig extends FilterConfig<Option<string>, Option<string>[]> {
+export type CheckboxFilterConfig = FilterConfig<Option<string>, Option<string>[]> & {
   inputType: 'checkbox'
   options: Option<string>[]
 }
 
-export interface RadioFilterConfig extends FilterConfig<Option<string>, Option<string>> {
+export type RadioFilterConfig = FilterConfig<Option<string>, Option<string>> & {
   inputType: 'radio'
   options: Option<string>[]
 }
-export interface SelectFilterConfig extends FilterConfig<Option<string>, Option<string>> {
+export type SelectFilterConfig = FilterConfig<Option<string>, Option<string>> & {
   inputType: 'select'
   options: Option<string>[]
+}
+
+export type AutocompleteFilterConfig = FilterConfig<Option<string>, Option<string>> & {
+  inputType: 'autocomplete'
+  options: Option<string>[]
+}
+
+export type TextfieldFilterConfig = FilterConfig<Option<string>, Option<string>> & {
+  inputType: 'textfield'
 }
 
 export const zDisplay = z.union([z.literal('all'), z.literal('missing'), z.literal('owned')])

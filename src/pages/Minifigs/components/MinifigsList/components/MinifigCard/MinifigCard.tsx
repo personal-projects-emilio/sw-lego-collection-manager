@@ -13,7 +13,7 @@ import useStyles from './styles'
 
 export const MinifigCard: FC<Minifig> = (minifig) => {
   const { classes } = useStyles()
-  const { toggleMinifigOwned, isLoading } = useMinifigsMutations()
+  const { toggleMinifigPossession, isLoading } = useMinifigsMutations()
   const { id, name, possessed, ...restMinifig } = minifig
   return (
     <Paper classes={{ root: classes.paper }}>
@@ -40,7 +40,7 @@ export const MinifigCard: FC<Minifig> = (minifig) => {
                 value={possessed}
                 checked={possessed}
                 disabled={isLoading}
-                onChange={() => toggleMinifigOwned(id)}
+                onChange={() => toggleMinifigPossession(id)}
               />
             </span>
           </Tooltip>

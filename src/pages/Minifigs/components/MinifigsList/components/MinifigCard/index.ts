@@ -1,1 +1,1 @@
-export { default } from './MinifigChips'
+export { default } from './MinifigCard'

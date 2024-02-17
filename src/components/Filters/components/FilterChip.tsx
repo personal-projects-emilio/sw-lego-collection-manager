@@ -1,7 +1,7 @@
 import { MouseEvent } from 'react'
 import { Chip } from '@mui/material'
 
-export interface FilterChipProps<K extends string> {
+export type FilterChipProps<K extends string> = {
   label: string
   filterName: K
   isDeletable?: boolean

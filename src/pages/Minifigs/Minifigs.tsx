@@ -29,6 +29,7 @@ export const Minifigs: FC = () => {
       total: data?.length ?? 0,
       filteredTotal: getFilteredMinifigsList(data ?? [], filterValues).length,
     }),
+    searchPath: '/',
   })
 
   if (isLoading) return <Skeleton variant="rectangular" height="calc(100vh - 48px)" />

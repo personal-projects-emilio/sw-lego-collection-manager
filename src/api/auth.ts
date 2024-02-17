@@ -10,3 +10,13 @@ export const loginUser = async (loginInputs: LoginInputs) => {
   })
   return response.data
 }
+
+export const refreshSecureToken = async () => {
+  const refreshToken = localStorage.getItem('refreshToken')
+  if (!refreshToken) return
+  const response = await axios.post(env.VITE_APP_REFRESH_AUTH_BASE_URL, {
+    refresh_token: refreshToken,
+    grant_type: 'refresh_token',
+  })
+  return response.data
+}

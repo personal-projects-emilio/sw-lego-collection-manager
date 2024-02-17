@@ -8,7 +8,7 @@ import {
 
 import { Option } from 'types/common'
 
-export interface RadioGroupProps<V extends string = string> {
+export type RadioGroupProps<V extends string = string> = {
   label: string
   options: Option<V>[]
   value: V
