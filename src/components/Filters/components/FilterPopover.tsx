@@ -6,7 +6,7 @@ import { FilterConfig } from 'types/filters'
 type FilterPopoverProps<
   K extends string = string,
   C extends Record<K, FilterConfig> = Record<K, FilterConfig>,
-  F extends Record<K, C[K]['defaultValue']> = Record<K, C[K]['defaultValue']>
+  F extends Record<K, C[K]['defaultValue']> = Record<K, C[K]['defaultValue']>,
 > = {
   anchorEl: HTMLElement | null
   onClose: () => void
@@ -19,7 +19,7 @@ type FilterPopoverProps<
 export function FilterPopover<
   K extends string = string,
   C extends Record<K, FilterConfig> = Record<K, FilterConfig>,
-  F extends Record<K, C[K]['defaultValue']> = Record<K, C[K]['defaultValue']>
+  F extends Record<K, C[K]['defaultValue']> = Record<K, C[K]['defaultValue']>,
 >({
   anchorEl,
   onClose,

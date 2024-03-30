@@ -62,16 +62,13 @@ export const BurgerMenu: FC = () => {
           'aria-labelledby': iconButtonId,
         }}
       >
-        <MenuItem
-          component={(props) => <Link {...props} />}
-          onClick={handleClose}
-          selected={currentRoute?.id === '/'}
-          to="/"
-        >
+        {/* @ts-expect-error Incorrect mui typing with Link */}
+        <MenuItem component={Link} onClick={handleClose} selected={currentRoute?.id === '/'} to="/">
           Minifigs
         </MenuItem>
+        {/* @ts-expect-error Incorrect mui typing with Link */}
         <MenuItem
-          component={(props) => <Link {...props} />}
+          component={Link}
           onClick={handleClose}
           selected={currentRoute?.id === '/sets'}
           to="/sets"
@@ -81,8 +78,9 @@ export const BurgerMenu: FC = () => {
         {idToken ? (
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         ) : (
+          //@ts-expect-error Incorrect mui typing with Link
           <MenuItem
-            component={(props) => <Link {...props} />}
+            component={Link}
             onClick={handleClose}
             selected={currentRoute?.id === '/auth'}
             to="/auth"

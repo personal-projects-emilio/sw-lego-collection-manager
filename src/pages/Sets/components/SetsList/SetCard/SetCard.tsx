@@ -13,7 +13,7 @@ import useStyles from './styles'
 
 export const SetCard: FC<Set> = (set) => {
   const { classes } = useStyles()
-  const { toggleSetPossession, isLoading } = useSetsMutation()
+  const { toggleSetPossession, isPending } = useSetsMutation()
   const { id, name, possessed } = set
   return (
     <Paper classes={{ root: classes.paper }}>
@@ -31,12 +31,12 @@ export const SetCard: FC<Set> = (set) => {
         <LogoLink id={id} variant="set" target="bricklink" />
         <LogoLink id={id} variant="set" target="brickset" />
         <Divider flexItem orientation="vertical" />
-        <Tooltip title={isLoading ? 'Mutating...' : undefined}>
+        <Tooltip title={isPending ? 'Mutating...' : undefined}>
           <span>
             <Switch
               value={possessed}
               checked={possessed}
-              disabled={isLoading}
+              disabled={isPending}
               onChange={() => toggleSetPossession(id)}
             />
           </span>

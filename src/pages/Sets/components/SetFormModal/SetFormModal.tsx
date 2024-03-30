@@ -38,7 +38,7 @@ const isEditMode = (editionData: SetFormModalProps['editionSetData']): editionDa
 export const SetFormModal: FC<SetFormModalProps> = ({ handleClose, editionSetData }) => {
   const { data: setsList } = useSetsQuery()
   const { classes } = useStyles()
-  const { addSet, editSet, isLoading } = useSetsMutations()
+  const { addSet, editSet, isPending } = useSetsMutations()
   const editMode = isEditMode(editionSetData)
   const setStatistics = useMemo(() => getSetsListStatistics(setsList ?? []), [setsList])
   const options = useMemo(
@@ -435,10 +435,10 @@ export const SetFormModal: FC<SetFormModalProps> = ({ handleClose, editionSetDat
           </DisplayIfAuthenticated>
         </DialogContent>
         <DialogActions>
-          <LoadingButton onClick={onClose} color="primary" loading={isLoading}>
+          <LoadingButton onClick={onClose} color="primary" loading={isPending}>
             Cancel
           </LoadingButton>
-          <LoadingButton type="submit" color="primary" variant="contained" loading={isLoading}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isPending}>
             {editMode ? `Edit ${editionSetData.id}` : 'Add a set'}
           </LoadingButton>
         </DialogActions>

@@ -12,7 +12,7 @@ type UseFiltersProps<
     Key,
     Configs[Key]['defaultValue']
   >,
-  SearchSchema extends ZodRawShape = ZodRawShape
+  SearchSchema extends ZodRawShape = ZodRawShape,
 > = {
   filterConfigs: Configs
   initialFilters: Filters
@@ -34,7 +34,7 @@ export const useFilters = <
   >,
   FilterValues extends Partial<Record<Key, ReturnType<Configs[Key]['getValues']>>> = Partial<
     Record<Key, ReturnType<Configs[Key]['getValues']>>
-  >
+  >,
 >({
   filterConfigs,
   initialFilters,

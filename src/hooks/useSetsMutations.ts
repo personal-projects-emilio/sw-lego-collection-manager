@@ -9,7 +9,7 @@ export const useSetsMutation = () => {
   const { data: setsList } = useSetsQuery()
   const { idToken } = useAuth()
 
-  const { isLoading, mutateAsync } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationFn: async (data: SetsList) => await mutateSets(data),
     onSuccess: () => invalidateSetsQuery(),
   })
@@ -83,7 +83,7 @@ export const useSetsMutation = () => {
     deleteSet,
     addSet,
     editSet,
-    isLoading,
+    isPending,
     toggleSetPossession,
     editSetsList,
   }

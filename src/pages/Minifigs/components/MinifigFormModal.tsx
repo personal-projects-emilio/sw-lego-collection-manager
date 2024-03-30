@@ -33,7 +33,7 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
   editionMinifigData,
 }) => {
   const { data: minifigsList } = useMinifigsQuery()
-  const { addMinifig, editMinifig, isLoading } = useMinifigsMutations()
+  const { addMinifig, editMinifig, isPending } = useMinifigsMutations()
   const editMode = isEditMode(editionMinifigData)
   const minifigStatistics = useMemo(
     () => getMinifigsListStatistics(minifigsList ?? []),
@@ -223,10 +223,10 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
           />
         </DialogContent>
         <DialogActions>
-          <LoadingButton onClick={onClose} color="primary" loading={isLoading}>
+          <LoadingButton onClick={onClose} color="primary" loading={isPending}>
             Cancel
           </LoadingButton>
-          <LoadingButton type="submit" color="primary" variant="contained" loading={isLoading}>
+          <LoadingButton type="submit" color="primary" variant="contained" loading={isPending}>
             {editMode ? `Edit ${editionMinifigData.id}` : 'Add a minifig'}
           </LoadingButton>
         </DialogActions>

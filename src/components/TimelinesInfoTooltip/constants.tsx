@@ -1,6 +1,6 @@
 import { FaEmpire, FaFirstOrder, FaGalacticRepublic, FaOldRepublic, FaRebel } from 'react-icons/fa'
 
-import { ReactComponent as NewRepublic } from 'assets/new-republic.svg'
+import NewRepublic from 'assets/new-republic.svg?react'
 
 export const starWarsTimeline = [
   {

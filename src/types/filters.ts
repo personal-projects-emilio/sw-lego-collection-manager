@@ -11,7 +11,7 @@ export type FiltersController<
   >,
   FilterValues extends Partial<Record<Key, ReturnType<Configs[Key]['getValues']>>> = Partial<
     Record<Key, ReturnType<Configs[Key]['getValues']>>
-  >
+  >,
 > = {
   filterConfigs: Configs
   filters: Filters

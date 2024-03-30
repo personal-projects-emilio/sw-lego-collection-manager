@@ -14,7 +14,7 @@ export const useMinifigsMutations = () => {
   const { data: minifigsList } = useMinifigsQuery()
   const { idToken } = useAuth()
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (data: MinifigsList) => mutateMinifigs(data),
     onSuccess: () => invalidateMinifigsQuery(),
   })
@@ -95,7 +95,7 @@ export const useMinifigsMutations = () => {
     addMinifig,
     editMinifig,
     editMinifigsList,
-    isLoading,
+    isPending,
   }
 }
 
