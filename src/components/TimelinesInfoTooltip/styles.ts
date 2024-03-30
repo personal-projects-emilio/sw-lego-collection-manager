@@ -10,7 +10,6 @@ const useStyles = makeStyles()((theme) => ({
   },
   tooltip: {
     maxWidth: 'none',
-    backgroundColor: theme.palette.grey[800],
   },
   timeline: {
     maxHeight: '100vh',

@@ -7,9 +7,18 @@ import { Minifig } from 'types/minifigs'
 
 import useStyles from './styles'
 
-type MinifigChipsProps = Pick<Minifig, 'tags' | 'characterName' | 'timelines' | 'appearances'>
+type MinifigChipsProps = Pick<
+  Minifig,
+  'tags' | 'characterName' | 'timelines' | 'appearances' | 'id'
+>
 
-const MinifigChips: FC<MinifigChipsProps> = ({ tags, characterName, timelines, appearances }) => {
+const MinifigChips: FC<MinifigChipsProps> = ({
+  tags,
+  characterName,
+  timelines,
+  appearances,
+  id,
+}) => {
   const { classes } = useStyles()
   const { handleApplyFilter, handleDeleteFilter, filtersValues, filterConfigs } =
     useMinifigsFilters()
@@ -42,7 +51,7 @@ const MinifigChips: FC<MinifigChipsProps> = ({ tags, characterName, timelines, a
               return (
                 <Chip
                   variant="filled"
-                  key={`${characterName}-${tag}`}
+                  key={`${id}-${characterName}-${tag}`}
                   label={tag}
                   {...(isActiveTagFilter
                     ? {
@@ -72,7 +81,7 @@ const MinifigChips: FC<MinifigChipsProps> = ({ tags, characterName, timelines, a
               return (
                 <Chip
                   variant="filled"
-                  key={`${characterName}-${timeline}`}
+                  key={`${id}-${characterName}-${timeline}`}
                   label={timeline}
                   {...(isActiveTimelineFilter
                     ? {
@@ -95,7 +104,7 @@ const MinifigChips: FC<MinifigChipsProps> = ({ tags, characterName, timelines, a
               return (
                 <Chip
                   variant="filled"
-                  key={`${characterName}-${appearance}`}
+                  key={`${id}-${characterName}-${appearance}`}
                   label={appearance}
                   {...(isActiveAppearanceFilter
                     ? {

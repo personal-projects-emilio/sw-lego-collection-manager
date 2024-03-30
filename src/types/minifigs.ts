@@ -21,11 +21,24 @@ export const minifigValidationSchema = z.object({
   possessed: z.boolean().default(false),
   tags: z.array(z.string()).default([]),
   timelines: z.array(z.string()).default([]),
-  setApparances: z
-    .array(
-      z.object({ setId: z.string().min(1).or(z.number().min(1)), quantity: z.number().min(1) })
-    )
-    .default([]),
+  owned: z.object({
+    loose: z
+      .object({
+        quantity: z.number().default(0),
+        isInFrame: z.boolean().default(false),
+      })
+      .default({ quantity: 0, isInFrame: false }),
+    total: z.number().default(0),
+    inSet: z
+      .array(
+        z.object({
+          setId: z.string().min(1).or(z.number().min(1)),
+          quantity: z.number().min(1),
+          isInFrame: z.boolean().default(false),
+        })
+      )
+      .default([]),
+  }),
 })
 
 export type Minifig = z.infer<typeof minifigValidationSchema>

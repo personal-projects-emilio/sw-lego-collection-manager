@@ -19,8 +19,8 @@ const useStyles = makeStyles()((theme) => ({
   },
   img: {
     width: 'auto',
-    maxWidth: 'min(100%, 222px)',
-    maxHeight: 'min(100%, 333px)',
+    maxWidth: '100%',
+    maxHeight: 222,
     gridArea: 'a',
     justifySelf: 'baseline',
   },

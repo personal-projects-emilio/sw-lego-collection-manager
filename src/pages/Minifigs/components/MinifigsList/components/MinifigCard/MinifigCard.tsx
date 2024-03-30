@@ -8,13 +8,14 @@ import { Minifig } from 'types/minifigs'
 
 import MinifigChips from './components/MinifigChips'
 import MutationSpeedDial from './components/MutationSpeedDial'
+import OwnedAvatar from './components/OwnedAvatar'
 
 import useStyles from './styles'
 
 export const MinifigCard: FC<Minifig> = (minifig) => {
   const { classes } = useStyles()
   const { toggleMinifigPossession, isLoading } = useMinifigsMutations()
-  const { id, name, possessed, ...restMinifig } = minifig
+  const { id, name, possessed, owned, ...restMinifig } = minifig
   return (
     <Paper classes={{ root: classes.paper }}>
       <img
@@ -28,11 +29,13 @@ export const MinifigCard: FC<Minifig> = (minifig) => {
           {name}
         </OverflowTypography>
         <Divider />
-        <MinifigChips {...restMinifig} />
+        <MinifigChips {...restMinifig} id={id} />
         <Divider />
         <div className={classes.linkContainer}>
           <LogoLink id={id} variant="minifig" target="bricklink" />
           <LogoLink id={id} variant="minifig" target="brickset" />
+          <Divider flexItem orientation="vertical" />
+          <OwnedAvatar {...owned} id={id} />
           <Divider flexItem orientation="vertical" />
           <Tooltip title={isLoading ? 'Mutating...' : undefined}>
             <span>
@@ -44,7 +47,6 @@ export const MinifigCard: FC<Minifig> = (minifig) => {
               />
             </span>
           </Tooltip>
-
           <MutationSpeedDial {...minifig} />
         </div>
       </div>

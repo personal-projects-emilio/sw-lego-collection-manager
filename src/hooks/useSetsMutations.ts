@@ -34,7 +34,6 @@ export const useSetsMutation = () => {
     const updatedSetsList = setsList.map((existingSet) =>
       existingSet.id === set.id ? set : existingSet
     )
-    // .sort((a, b) => String(a.id).localeCompare(String(b.id), undefined, { numeric: true }))
 
     if (!idToken) return setSetsQueryData(updatedSetsList)
 
@@ -72,13 +71,13 @@ export const useSetsMutation = () => {
     })
   }
 
-  // const editSetsList = async (newSetsList: Set[]) => {
-  //   assert(setsList, 'No sets list found')
-  //   if (!idToken) return setSetsQueryData(newSetsList)
-  //   await mutate(newSetsList, {
-  //     onError: (err) => console.error('Unable to edit sets list', err),
-  //   })
-  // }
+  const editSetsList = async (newSetsList: Set[]) => {
+    assert(setsList, 'No sets list found')
+    if (!idToken) return setSetsQueryData(newSetsList)
+    await mutateAsync(newSetsList, {
+      onError: (err) => console.error('Unable to edit sets list', err),
+    })
+  }
 
   return {
     deleteSet,
@@ -86,7 +85,7 @@ export const useSetsMutation = () => {
     editSet,
     isLoading,
     toggleSetPossession,
-    // editSetsList,
+    editSetsList,
   }
 }
 

@@ -51,8 +51,7 @@ export function Filters<
       return getEntries(filterConfigs).reduce((acc, curr) => {
         const [filterName, config] = curr as [Key, Configs[Key]]
         const configValue = filters[filterName]
-        if (!configValue) return acc
-        if (!config.displayChip(configValue)) return acc
+        if (!configValue || !config.displayChip(configValue)) return acc
         return [
           ...acc,
           {
@@ -81,24 +80,28 @@ export function Filters<
         .sort((a, b) => a.label.localeCompare(b.label)),
     [chips, filterConfigs]
   )
-
   return (
-    <Box
-      sx={(theme) => ({
-        display: 'flex',
-        gap: theme.spacing(1),
-        alignItems: 'center',
-      })}
-    >
-      {chips.map((chipsProps) => (
-        <FilterChip
-          key={`chip-filter-${chipsProps.filterName}`}
-          {...chipsProps}
-          handleDeleteFilter={handleDeleteFilter}
-          handleEditFilter={handleEditFilter}
-        />
-      ))}
-
+    <>
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          gap: theme.spacing(1),
+          alignItems: 'center',
+        })}
+      >
+        {chips.map((chipsProps) => (
+          <FilterChip
+            key={`chip-filter-${chipsProps.filterName}`}
+            {...chipsProps}
+            handleDeleteFilter={handleDeleteFilter}
+            handleEditFilter={handleEditFilter}
+          />
+        ))}
+        {Boolean(availableFilterConfigs.length) && (
+          <Button onClick={handleShowPopover}>Add a filter</Button>
+        )}
+        <Typography variant="caption">{`${filteredTotal} of ${total}`}</Typography>
+      </Box>
       <FilterPopover
         anchorEl={anchorEl}
         onClose={handleClosePopover}
@@ -107,11 +110,7 @@ export function Filters<
         handleApplyFilter={handleApplyFilter}
         handleAddFilter={handleAddFilter}
       />
-      {Boolean(availableFilterConfigs.length) && (
-        <Button onClick={handleShowPopover}>Add a filter</Button>
-      )}
-      <Typography variant="caption">{`${filteredTotal} of ${total}`}</Typography>
-    </Box>
+    </>
   )
 }
 

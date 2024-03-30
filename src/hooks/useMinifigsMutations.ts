@@ -14,7 +14,7 @@ export const useMinifigsMutations = () => {
   const { data: minifigsList } = useMinifigsQuery()
   const { idToken } = useAuth()
 
-  const { mutate, isLoading } = useMutation({
+  const { mutateAsync, isLoading } = useMutation({
     mutationFn: (data: MinifigsList) => mutateMinifigs(data),
     onSuccess: () => invalidateMinifigsQuery(),
   })
@@ -31,7 +31,7 @@ export const useMinifigsMutations = () => {
 
     if (!idToken) return setMinifigsQueryData(updatedMinifigsList)
 
-    mutate(updatedMinifigsList, {
+    await mutateAsync(updatedMinifigsList, {
       onError: (err) => console.error('Unable to toggle minifig owned', err),
     })
   }
@@ -45,7 +45,7 @@ export const useMinifigsMutations = () => {
 
     if (!idToken) return setMinifigsQueryData(updatedMinifigsList)
 
-    await mutate(updatedMinifigsList, {
+    await mutateAsync(updatedMinifigsList, {
       onError: (err) => console.error('Unable to add the minifig', err),
     })
   }
@@ -59,7 +59,7 @@ export const useMinifigsMutations = () => {
 
     if (!idToken) return setMinifigsQueryData(updatedMinifigsList)
 
-    await mutate(updatedMinifigsList, {
+    await mutateAsync(updatedMinifigsList, {
       onError: (err) => console.error('Unable to edit the minifig', err),
     })
   }
@@ -74,8 +74,18 @@ export const useMinifigsMutations = () => {
 
     if (!idToken) return setMinifigsQueryData(updatedMinifigsList)
 
-    await mutate(updatedMinifigsList, {
+    await mutateAsync(updatedMinifigsList, {
       onError: (err) => console.error('Unable to delete the minifig', err),
+    })
+  }
+
+  const editMinifigsList = async (newMinifigsList: MinifigsList) => {
+    assert(minifigsList, 'No minifigs list found')
+
+    if (!idToken) return setMinifigsQueryData(newMinifigsList)
+
+    await mutateAsync(newMinifigsList, {
+      onError: (err) => console.error('Unable to edit minifigs list', err),
     })
   }
 
@@ -84,6 +94,7 @@ export const useMinifigsMutations = () => {
     deleteMinifig,
     addMinifig,
     editMinifig,
+    editMinifigsList,
     isLoading,
   }
 }
