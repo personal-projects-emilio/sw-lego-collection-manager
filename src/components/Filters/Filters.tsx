@@ -12,7 +12,7 @@ export function Filters<
   Filters extends Record<Key, Configs[Key]['defaultValue']> = Record<
     Key,
     Configs[Key]['defaultValue']
-  >
+  >,
 >({
   filterConfigs,
   filters,
@@ -48,35 +48,41 @@ export function Filters<
     useMemo(() => {
       if (!Object.keys(filters).length) return []
 
-      return getEntries(filterConfigs).reduce((acc, curr) => {
-        const [filterName, config] = curr as [Key, Configs[Key]]
-        const configValue = filters[filterName]
-        if (!configValue || !config.displayChip(configValue)) return acc
-        return [
-          ...acc,
-          {
-            filterName,
-            label: `${config.label}: ${config.chipLabel(configValue)}`,
-            isDeletable: !config.isMandatory,
-          },
-        ]
-      }, [] as Pick<FilterChipProps<Key>, 'label' | 'filterName' | 'isDeletable'>[])
+      return getEntries(filterConfigs).reduce(
+        (acc, curr) => {
+          const [filterName, config] = curr as [Key, Configs[Key]]
+          const configValue = filters[filterName]
+          if (!configValue || !config.displayChip(configValue)) return acc
+          return [
+            ...acc,
+            {
+              filterName,
+              label: `${config.label}: ${config.chipLabel(configValue)}`,
+              isDeletable: !config.isMandatory,
+            },
+          ]
+        },
+        [] as Pick<FilterChipProps<Key>, 'label' | 'filterName' | 'isDeletable'>[]
+      )
     }, [filterConfigs, filters])
 
   const availableFilterConfigs = useMemo(
     () =>
       getEntries(filterConfigs)
-        .reduce((acc, curr) => {
-          const [filterName, config] = curr as [Key, Configs[Key]]
-          if (chips.find((el) => el.filterName === filterName)) return acc
-          return [
-            ...acc,
-            {
-              ...config,
-              filterName,
-            },
-          ]
-        }, [] as Array<Configs[Key] & { filterName: Key }>)
+        .reduce(
+          (acc, curr) => {
+            const [filterName, config] = curr as [Key, Configs[Key]]
+            if (chips.find((el) => el.filterName === filterName)) return acc
+            return [
+              ...acc,
+              {
+                ...config,
+                filterName,
+              },
+            ]
+          },
+          [] as Array<Configs[Key] & { filterName: Key }>
+        )
         .sort((a, b) => a.label.localeCompare(b.label)),
     [chips, filterConfigs]
   )

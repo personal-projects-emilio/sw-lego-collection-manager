@@ -21,7 +21,7 @@ const DevTools =
           }))
         ),
         Query: lazy(() =>
-          import('@tanstack/react-query-devtools/build/lib/index.prod.js').then((res) => ({
+          import('@tanstack/react-query-devtools').then((res) => ({
             default: res.ReactQueryDevtools,
           }))
         ),
@@ -32,8 +32,8 @@ export const Layout: FC = () => {
     <AuthProvider>
       <Header />
       <Outlet />
-      <DevTools.Router initialIsOpen={false} />
-      <DevTools.Query initialIsOpen={false} position="bottom-right" />
+      <DevTools.Router initialIsOpen={false} position="bottom-right" />
+      <DevTools.Query initialIsOpen={false} />
     </AuthProvider>
   )
 }

@@ -8,8 +8,9 @@ import { AutocompleteOption, AutocompleteProps } from './types'
 
 const filter = createFilterOptions<AutocompleteOption>()
 
-const asNoValue = (option: AutocompleteOption | AutocompleteOption[] | null | undefined): boolean =>
-  option === null || (Array.isArray(option) && option.length === 0) ? true : false
+const asNoValue = (
+  option: AutocompleteOption | AutocompleteOption[] | null | undefined
+): boolean => (option === null || (Array.isArray(option) && option.length === 0) ? true : false)
 
 export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
   ({ multiple, options, creatable, label, value, TextFieldProps, onChange, ...rest }, ref) => {

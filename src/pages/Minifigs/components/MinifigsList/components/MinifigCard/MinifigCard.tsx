@@ -14,7 +14,7 @@ import useStyles from './styles'
 
 export const MinifigCard: FC<Minifig> = (minifig) => {
   const { classes } = useStyles()
-  const { toggleMinifigPossession, isLoading } = useMinifigsMutations()
+  const { toggleMinifigPossession, isPending } = useMinifigsMutations()
   const { id, name, possessed, owned, ...restMinifig } = minifig
   return (
     <Paper classes={{ root: classes.paper }}>
@@ -37,12 +37,12 @@ export const MinifigCard: FC<Minifig> = (minifig) => {
           <Divider flexItem orientation="vertical" />
           <OwnedAvatar {...owned} id={id} />
           <Divider flexItem orientation="vertical" />
-          <Tooltip title={isLoading ? 'Mutating...' : undefined}>
+          <Tooltip title={isPending ? 'Mutating...' : undefined}>
             <span>
               <Switch
                 value={possessed}
                 checked={possessed}
-                disabled={isLoading}
+                disabled={isPending}
                 onChange={() => toggleMinifigPossession(id)}
               />
             </span>

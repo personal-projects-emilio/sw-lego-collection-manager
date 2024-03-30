@@ -13,8 +13,8 @@ export const SyncMinifigsButton: FC = () => {
   const [open, setOpen] = useState(false)
   const { data: setsList } = useSetsQuery()
   const { data: minifigsList } = useMinifigsQuery()
-  const { editSetsList, isLoading: isSetLoading } = useSetsMutation()
-  const { editMinifigsList, isLoading: isMinifigLoading } = useMinifigsMutations()
+  const { editSetsList, isPending: isSetPending } = useSetsMutation()
+  const { editMinifigsList, isPending: isMinifigPending } = useMinifigsMutations()
 
   const onClose = () => setOpen(false)
   const syncSetsAndMinifigs = async () => {
@@ -22,8 +22,8 @@ export const SyncMinifigsButton: FC = () => {
     const cleanedMinifigsList = minifigsList.map((minifig) => ({
       ...minifig,
       owned: {
-        total: minifig.owned?.loose.quantity ?? 0,
-        loose: minifig.owned?.loose ?? [],
+        total: minifig.owned.loose.quantity ?? 0,
+        loose: minifig.owned.loose,
         inSet: [] as Minifig['owned']['inSet'],
       },
     }))
@@ -114,7 +114,7 @@ export const SyncMinifigsButton: FC = () => {
             <LoadingButton
               onClick={onClose}
               color="primary"
-              loading={isSetLoading || isMinifigLoading}
+              loading={isSetPending || isMinifigPending}
             >
               Cancel
             </LoadingButton>
@@ -122,7 +122,7 @@ export const SyncMinifigsButton: FC = () => {
               onClick={syncSetsAndMinifigs}
               color="primary"
               variant="contained"
-              loading={isSetLoading || isMinifigLoading}
+              loading={isSetPending || isMinifigPending}
             >
               Sync sets/minifigs
             </LoadingButton>

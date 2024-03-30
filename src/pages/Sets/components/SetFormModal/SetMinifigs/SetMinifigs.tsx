@@ -181,7 +181,6 @@ export const SetMinifigs = forwardRef<HTMLDivElement, SetMinifigsProps>(
                   <Autocomplete
                     {...field}
                     label="Minifig id"
-                    placeholder="Minifig id (ex: sw0001)"
                     options={minifigsOptions}
                     autoFocus={!minifigEditId}
                     TextFieldProps={{
@@ -189,6 +188,7 @@ export const SetMinifigs = forwardRef<HTMLDivElement, SetMinifigsProps>(
                       helperText: fieldState.error?.message,
                       required: true,
                       autoFocus: !minifigEditId,
+                      placeholder: 'Minifig id (ex: sw0001)',
                     }}
                   />
                 )}
