@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 
 import { useSetsQuery } from 'api/sets'
+import DisplayIfAuthenticated from 'components/DisplayIfAuthenticated'
 import { Checkbox } from 'components/inputs'
 import { Autocomplete } from 'components/inputs/Autocomplete'
 import useSetsMutations from 'hooks/useSetsMutations'
@@ -21,8 +22,8 @@ import { Set, setValidationSchema } from 'types/sets'
 import { formatOptionsFromLabelAndAmout } from 'utils/filters'
 import { getSetsListStatistics } from 'utils/sets'
 
-import SetMinifigs from './components/SetMinifigs'
 import { defaultSetFormValues } from './constants'
+import SetMinifigs from './SetMinifigs'
 
 import useStyles from './styles'
 
@@ -379,57 +380,59 @@ export const SetFormModal: FC<SetFormModalProps> = ({ handleClose, editionSetDat
               />
             )}
           />
-          <Typography variant="h6" className={classes.grid12}>
-            Prices
-          </Typography>
-          <Controller
-            name="prices.bought"
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                onChange={(event) => field?.onChange?.(parseFloat(event.target.value))}
-                className={classes.grid4}
-                label="Bought"
-                error={fieldState.invalid}
-                helperText={fieldState.error?.message}
-                required
-                type="number"
-              />
-            )}
-          />
-          <Controller
-            name="prices.storeValue"
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                onChange={(event) => field?.onChange?.(parseFloat(event.target.value))}
-                className={classes.grid4}
-                label="Store Value"
-                error={fieldState.invalid}
-                helperText={fieldState.error?.message}
-                required
-                type="number"
-              />
-            )}
-          />
-          <Controller
-            name="prices.marketValue"
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                {...field}
-                onChange={(event) => field?.onChange?.(parseFloat(event.target.value))}
-                className={classes.grid4}
-                label="Market Value"
-                error={fieldState.invalid}
-                helperText={fieldState.error?.message}
-                required
-                type="number"
-              />
-            )}
-          />
+          <DisplayIfAuthenticated>
+            <Typography variant="h6" className={classes.grid12}>
+              Prices
+            </Typography>
+            <Controller
+              name="prices.bought"
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  onChange={(event) => field?.onChange?.(parseFloat(event.target.value))}
+                  className={classes.grid4}
+                  label="Bought"
+                  error={fieldState.invalid}
+                  helperText={fieldState.error?.message}
+                  required
+                  type="number"
+                />
+              )}
+            />
+            <Controller
+              name="prices.storeValue"
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  onChange={(event) => field?.onChange?.(parseFloat(event.target.value))}
+                  className={classes.grid4}
+                  label="Store Value"
+                  error={fieldState.invalid}
+                  helperText={fieldState.error?.message}
+                  required
+                  type="number"
+                />
+              )}
+            />
+            <Controller
+              name="prices.marketValue"
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  onChange={(event) => field?.onChange?.(parseFloat(event.target.value))}
+                  className={classes.grid4}
+                  label="Market Value"
+                  error={fieldState.invalid}
+                  helperText={fieldState.error?.message}
+                  required
+                  type="number"
+                />
+              )}
+            />
+          </DisplayIfAuthenticated>
         </DialogContent>
         <DialogActions>
           <LoadingButton onClick={onClose} color="primary" loading={isLoading}>

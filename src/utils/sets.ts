@@ -2,7 +2,6 @@ import { SetFiltersContextProps } from 'pages/Sets/hooks/useSetsFilters'
 import { SetsList, SetsListStatistics } from 'types/sets'
 
 import { statisticsHelper } from './array'
-import { searchInObject } from './filters'
 
 /**
  * Return the tags, character names, timelines and appearances alphabetically sorted lists and some other misce stats from a SetsList
@@ -56,7 +55,7 @@ export const getFilteredSetsList = (
     const hasFilterAppearance = appearance ? appearances?.includes(appearance) : true
     const hasFilterTimeline = timeline ? timelines?.includes(timeline) : true
     const isReleaseYear = filterReleaseYear ? filterReleaseYear === String(releaseYear) : true
-    const hasSearch = search ? searchInObject(set, search) : true
+    const hasSearch = search ? JSON.stringify(set).includes(search) : true
     return (
       displayFiltered &&
       hasFilterTag &&
@@ -67,3 +66,30 @@ export const getFilteredSetsList = (
       hasSearch
     )
   })
+
+/**
+ * Return the prices statistics of the sets list
+ * @param  {SetsList} setsList
+ */
+export const getSetsPricesStatistics = (setsList: SetsList) => {
+  const partialSetsPricesStatistics = setsList.reduce(
+    (accumulator, currentSet) => {
+      if (!currentSet.possessed) return accumulator
+      const { bought, marketValue, storeValue } = currentSet.prices
+      return {
+        totalBought: accumulator.totalBought + bought,
+        totalMarketValue: accumulator.totalMarketValue + marketValue,
+        totalStoreValue: accumulator.totalStoreValue + storeValue,
+      }
+    },
+    { totalBought: 0, totalStoreValue: 0, totalMarketValue: 0 }
+  )
+  return {
+    ...partialSetsPricesStatistics,
+    percentage: Math.trunc(
+      100 -
+        (partialSetsPricesStatistics.totalBought / partialSetsPricesStatistics.totalMarketValue) *
+          100
+    ),
+  }
+}

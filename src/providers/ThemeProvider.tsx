@@ -18,6 +18,14 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: ({ theme }) => ({
+          backgroundColor: theme.palette.grey[800],
+          boxSizing: 'unset',
+        }),
+      },
+    },
   },
 })
 

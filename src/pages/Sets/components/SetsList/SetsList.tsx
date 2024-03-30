@@ -8,7 +8,7 @@ import useSetsFilters from 'pages/Sets/hooks/useSetsFilters'
 import { reduceInArrayOfNElements } from 'utils/array'
 import { getFilteredSetsList } from 'utils/sets'
 
-import SetCard from './components/SetCard'
+import SetCard from './SetCard'
 
 export const Sets: FC = () => {
   const { data, isLoading, error } = useSetsQuery()

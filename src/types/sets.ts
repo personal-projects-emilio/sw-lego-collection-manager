@@ -5,14 +5,16 @@ import { LabelAndAmout } from './common'
 export const setValidationSchema = z.object({
   appearances: z.array(z.string()).default([]),
   content: z.object({
-    minifigs: z.array(
-      z.object({
-        id: z.string().min(1),
-        characterName: z.string().min(1),
-        quantity: z.number().min(1),
-        isInFrame: z.boolean().default(false),
-      })
-    ),
+    minifigs: z
+      .array(
+        z.object({
+          id: z.string().min(1),
+          characterName: z.string().min(1),
+          quantity: z.number().min(1),
+          isInFrame: z.boolean().default(false),
+        })
+      )
+      .default([]),
     box: z.nullable(z.boolean()),
     notice: z.nullable(z.boolean()),
     bags: z.nullable(z.boolean()),
@@ -36,9 +38,9 @@ export const setValidationSchema = z.object({
   ownedQuantity: z.number(),
   possessed: z.boolean().default(false),
   prices: z.object({
-    bought: z.union([z.string(), z.number()]),
-    storeValue: z.union([z.string(), z.number()]),
-    marketValue: z.number(),
+    bought: z.number().default(0),
+    storeValue: z.number().default(0),
+    marketValue: z.number().default(0),
   }),
   releaseYear: z.number().min(1, {
     message: 'Release year is required',
