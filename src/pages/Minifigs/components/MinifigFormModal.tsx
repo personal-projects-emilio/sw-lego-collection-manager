@@ -78,6 +78,14 @@ export const MinifigFormModal: FC<MinifigFormModalProps> = ({
       possessed: false,
       tags: [],
       timelines: [],
+      owned: {
+        inSet: [],
+        loose: {
+          isInFrame: false,
+          quantity: 0,
+        },
+        total: 0,
+      },
       ...editionMinifigData,
     },
     resolver: zodResolver(minifigValidationSchemaWithRefinedIdCheck),
