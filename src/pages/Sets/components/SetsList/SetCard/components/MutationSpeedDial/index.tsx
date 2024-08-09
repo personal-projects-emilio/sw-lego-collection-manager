@@ -18,7 +18,7 @@ import useStyles from './style'
 
 export const MutationSpeedDial: FC<Set> = (props) => {
   const { classes } = useStyles()
-  const { id, tags, timelines, appearances } = props
+  const { id, tags = [], timelines = [], appearances = [] } = props
   const { deleteSet } = useSetsMutation()
   const [isEditModalOpen, toggleEditModalOpen] = useToggle()
   const [isDuplicateModalOpen, toggleDuplicateModalOpen] = useToggle()

@@ -17,7 +17,7 @@ import useStyles from './style'
 
 export const MutationSpeedDial: FC<Minifig> = (props) => {
   const { classes } = useStyles()
-  const { id, characterName, tags } = props
+  const { id, appearances = [], characterName, tags = [], timelines = [] } = props
   const { deleteMinifig } = useMinifigsMutations()
   const [isEditModalOpen, toggleEditModalOpen] = useToggle()
   const [isDuplicateModalOpen, toggleDuplicateModalOpen] = useToggle()
@@ -53,7 +53,7 @@ export const MutationSpeedDial: FC<Minifig> = (props) => {
         <SpeedDialAction icon={<MdEdit />} tooltipTitle="Edit" onClick={handleEditClick} />
         <SpeedDialAction
           icon={<MdContentCopy />}
-          tooltipTitle="Duplicate character name and tags"
+          tooltipTitle="Duplicate character appearances, character name, tags and timelines"
           onClick={handleDuplicateClick}
         />
         <SpeedDialAction
@@ -65,7 +65,9 @@ export const MutationSpeedDial: FC<Minifig> = (props) => {
       {(isEditModalOpen || isDuplicateModalOpen) && (
         <MinifigFormModal
           handleClose={() => (isEditModalOpen ? toggleEditModalOpen() : toggleDuplicateModalOpen())}
-          editionMinifigData={isEditModalOpen ? props : { tags, characterName }}
+          editionMinifigData={
+            isEditModalOpen ? props : { tags, characterName, timelines, appearances }
+          }
         />
       )}
       {isDeleteModalOpen && (

@@ -11,7 +11,7 @@ const menuId = 'menu-header'
 
 export const BurgerMenu: FC = () => {
   const { idToken, logout } = useAuth()
-  const currentRoute = useCurrentRoute(['/', '/auth'])
+  const currentRoute = useCurrentRoute(['/', '/sets', '/auth'])
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null)
   const open = Boolean(anchorEl)
